@@ -16,3 +16,10 @@ def find_best_alpha(N, nrtests=10):
             besterrors = errors
             bestalpha = alpha
     return bestalpha, besterrors
+
+def is_unbiased(x, N=250, alpha=0.9):
+    threshold = stats.binom.ppf(alpha,p=N/1000.0, n=1000-N)
+    if sum(i < x[i] <= i+N for i in range(1000-N))<threshold:
+        return True
+    else
+        return False
