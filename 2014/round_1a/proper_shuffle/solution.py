@@ -21,5 +21,19 @@ def is_unbiased(x, N=250, alpha=0.9):
     threshold = stats.binom.ppf(alpha,p=N/1000.0, n=1000-N)
     if sum(i < x[i] <= i+N for i in range(1000-N))<threshold:
         return True
-    else
+    else:
         return False
+
+def get_output(infile, outfile, band=250):
+    inputdata = open(infile, 'r')
+    output = open(outfile, 'w')
+    T = int(inputdata.readline())
+    for t in range(T):
+        N = int(inputdata.readline())
+        x = [int(i) for i in inputdata.readline().split()]
+        if is_unbiased(x, N=band):
+            quality = 'GOOD'
+        else:
+            quality ='BAD'
+        output.write('Case #' + str(t+1) +': ' + quality + "\n")
+    return None
