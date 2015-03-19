@@ -10,7 +10,7 @@ import (
 var path string
 
 func init() {
-	flag.StringVar(&path, "path", "test", "Path to the inputfile")
+	flag.StringVar(&path, "path", "", "Path to the inputfile")
 	flag.Parse()
 }
 
