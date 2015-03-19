@@ -1,15 +1,48 @@
-#http://stackoverflow.com/questions/699866/python-int-to-binary
-def binary(i):
-    if i == 0:
-        return [0]
-    s = []
-    while i:
-        if i & 1 == 1:
-            s = [1] + s
-        else:
-            s = [0] + s
-        i >>= 1
-    return s
+def bitLen(int_type):
+    length = 0
+    while (int_type):
+        int_type >>= 1
+        length += 1
+    return(length)
+
+def findwinners(A,B,K):
+    if K >= A and K >= B:
+        return (A+1)*(B+1)
+    m = max(A,B)
+    n = bitLen(m)
+    current = int(2**(n-1))
+    if K & current==0:
+        if A & current==0 and B & current== 0:
+            return findwinners(A&~current, B&~current, K&~current)
+        elif A & current == 0 and B & current == current:
+            return findwinners(A&~current, B&~current, K&~current)+findwinners(A&~current, 2**(n-1)-1, K&~current)
+        elif A & current == current and B & current == 0:
+            return findwinners(A&~current, B&~current, K&~current)+findwinners(2**(n-1)-1, B&~current, K&~current)
+        elif A & current == current and B & current == current:
+            return findwinners(2**(n-1)-1, 2**(n-1)-1, K&~current)+findwinners(A&~current, 2**(n-1)-1, K&~current)+findwinners(2**(n-1)-1, B&~current, K&~current)
+    else:
+        if A & current == 0 and B & current == 0:
+            return findwinners(A&~current, B&~current, 2**(n-1)-1)
+        elif A & current == 0 and B & current == current:
+            return findwinners(A&~current, B&~current, 2**(n-1)-1)+findwinners(A&~current, 2**(n-1)-1, 2**(n-1)-1)
+        elif A & current == current and B & current == 0:
+            return findwinners(A&~current, B&~current, 2**(n-1)-1)+findwinners(2**(n-1)-1, B&~current, 2**(n-1)-1)
+        elif A & current == current and B & current == current:
+            return findwinners(A&~current, B&~current, K&~current)+findwinners(A&~current, 2**(n-1)-1, 2**(n-1)-1)+findwinners(2**(n-1)-1, B&~current, 2**(n-1)-1)+findwinners(2**(n-1)-1, 2**(n-1)-1, 2**(n-1)-1)
+
+def get_output(instance):
+    inputdata = open(instance + ".in", 'r')
+    output = open(instance+ ".out", 'w')
+    T = int(inputdata.readline())
+    for t in range(T):
+        x = [int(i) for i in inputdata.readline().split()]
+        A = x[0]-1
+        B = x[1]-1
+        K = x[2]-1
+        output.write('Case #' + str(t+1) +': ' + str(findwinners(A,B,K)) + "\n")
+    return None
+
+'''Stupid stuff, for reference:
 
 def decimal(binlist):
     return sum(binlist[-j]*2**(j-1) for j in range(len(binlist),0,-1))
@@ -119,3 +152,4 @@ def numberofwinners(A,B,K):
             Bbit.pop(-nK)
         count+=numberofwinners(decimal(Abit)+1, decimal(Bbit)+1, decimal(Kbit[1:])+1)
         return count
+'''
