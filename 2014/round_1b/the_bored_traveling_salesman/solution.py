@@ -43,15 +43,16 @@ def bestroute(graph):
             candidate = candidates.pop()
             testgraph = copy.deepcopy(graph)
             removedvertices = []
-            removedvertices.append(returnflight.pop())
-            while not candidate in graph[removedvertices[-1]]:
-                removedvertices.append(returnflight.pop())
-            testgraph =deletenodes(testgraph, removedvertices[:-1])
+            node = returnflight.pop()
+            while not candidate in graph[node]:
+                removedvertices.append(node)
+                node = returnflight.pop()
+            returnflight.append(node)
+            testgraph =deletenodes(testgraph, removedvertices)
             if is_connected(testgraph):
                 graph=copy.deepcopy(testgraph)
                 candidateadded=True
                 visited.append(candidate)
-                returnflight.append(removedvertices[-1])
                 returnflight.append(candidate)
                 neighbors=set()
                 for node in returnflight:
@@ -77,5 +78,8 @@ def get_output(instance):
             graph[nodes[edge[0]]].append(nodes[edge[1]])
             graph[nodes[edge[1]]].append(nodes[edge[0]])
         print t
+        if t == 99:
+            print graph
         output.write('Case #' + str(t+1) +': ' + bestroute(graph) +  "\n")
+        print(len(bestroute(graph)))
     return None
