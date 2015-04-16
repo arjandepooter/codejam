@@ -23,18 +23,19 @@ type Problem struct {
 }
 
 func (problem Problem) Solve() string {
-	l := problem.list
-	s := 0
-	for len(l) > 2 {
-		minI := min(l)
-		if minI < len(l)-minI-1 {
-			s += minI
-		} else {
-			s += len(l) - minI - 1
-		}
-		l = append(l[:minI], l[minI+1:]...)
+	return fmt.Sprint(getSwaps(problem.list))
+}
+
+func getSwaps(list []int) int {
+	if len(list) <= 2 {
+		return 0
 	}
-	return fmt.Sprint(s)
+	minI := min(list)
+	s := getSwaps(append(list[:minI], list[minI+1:]...))
+	if minI < len(list)-minI-1 {
+		return s + minI
+	}
+	return s + (len(list) - minI - 1)
 }
 
 func min(list []int) int {
